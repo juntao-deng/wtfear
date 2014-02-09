@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><project basedir="." default="all">
+    <target name="wtfbase">
+        <war webxml="../../wtfbase/web/WEB-INF/web.xml" destfile="../../wtfbase/build/wtfbase.war">
+            <zipfileset prefix="WEB-INF/classes" dir="../../wtfbase/build/classes"/>
+            <fileset dir="../../wtfbase/web" includes="**/*"/>
+        </war>
+    </target>
+	<target name="wtfbaseEJB">
+        <jar filesetmanifest="merge" destfile="../../wtfbaseEJB/build/wtfbaseEJB.jar">
+            <fileset dir="../../wtfbaseEjb/build/classes" includes="**/*"/>
+        </jar>
+    </target>
+    <target name="wtfdocui">
+        <war webxml="../wtfdocui/web/WEB-INF/web.xml" destfile="../wtfdocui/build/wtfdocui.war">
+            <zipfileset prefix="WEB-INF/classes" dir="../wtfdocui/build/classes"/>
+            <fileset dir="../wtfdocui/web" includes="**/*"/>
+        </war>
+    </target>
+    <target name="wtfdocuiEJB">
+        <jar filesetmanifest="merge" destfile="../wtfdocuiEJB/build/wtfdocuiEJB.jar">
+            <fileset dir="../wtfdocuiEJB/build/classes" includes="**/*"/>
+        </jar>
+    </target>
+    
+    <target depends="" name="all">
+        <ant antfile="build.xml" dir="../../wtfbase" inheritAll="true" target="build"/>
+    	<ant antfile="build.xml" dir="../../wtfbaseEJB" inheritAll="true" target="build"/>
+        <ant antfile="build.xml" dir="../wtfdocui" inheritAll="true" target="build"/>
+        <ant antfile="build.xml" dir="../wtfdocuiEJB" inheritAll="true" target="build"/>
+        <antcall target="wtfbase"/>
+    	<antcall target="wtfbaseEJB"/>
+        <antcall target="wtfdocui"/>
+        <antcall target="wtfdocuiEJB"/>
+        <ear destfile="../wtfear/bin/wtfear.ear" appxml="../wtfear/EarContent/META-INF/application.xml">
+            <fileset dir="../wtfear/EarContent" includes="**/*"/>
+            <zipfileset prefix="" includes="wtfdocui.war" dir="../wtfdocui/build" fullpath="wtfdocui.war"/>
+            <zipfileset prefix="" includes="wtfdocuiEJB.jar" dir="../wtfdocuiEJB/build" fullpath="wtfdocuiEJB.jar"/>
+            <zipfileset prefix="" includes="wtfbase.war" dir="../../wtfbase/build" fullpath="wtfbase.war"/>
+        	<zipfileset prefix="" includes="wtfbaseEJB.jar" dir="../../wtfbaseEJB/build" fullpath="wtfbaseEJB.jar"/>
+        </ear>
+    </target>
+    <target if="" depends="" name="clean">
+        <ant antfile="build.xml" dir="../../wtfbase" inheritAll="true" target="clean"/>
+    	<ant antfile="build.xml" dir="../../wtfbaseEJB" inheritAll="true" target="clean"/>
+        <ant antfile="build.xml" dir="../wtfdocui" inheritAll="true" target="clean"/>
+        <ant antfile="build.xml" dir="../wtfdocEjb" inheritAll="true" target="clean"/>
+        <delete quiet="true">
+            <fileset dir="../../wtfbase/build" includes="wtfbase.war"/>
+        	<fileset dir="../../wtfbaseEJB/build" includes="wtfbaseEJB.jar"/>
+            <fileset dir="../wtfdocui/build" includes="wtfdocui.war"/>
+            <fileset dir="../wtfdocuiEJB/build" includes="wtfdocuiEJB.jar"/>
+        </delete>
+    </target>
+</project>
